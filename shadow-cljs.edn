@@ -1,0 +1,17 @@
+;; shadow-cljs configuration
+{:source-paths
+ ["src/dev"
+  "src/main"
+  "src/test"]
+
+ :dependencies
+ []
+
+ :builds
+ {:app {:target :browser
+         :output-dir "public/js"
+         :modules {:main {:entries [com.github.dbasner.this-or-that.core]}}
+         :devtools {:repl-init-ns com.github.dbasner.this-or-that.core
+                    :repl-pprint true
+                    :http-root "public/"
+                    :http-port 9001}}}}
