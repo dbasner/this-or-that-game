@@ -5,7 +5,9 @@
   "src/test"]
 
  :dependencies
- []
+ [[thheller/shadow-cljs "2.11.18"]
+  [binaryage/oops "0.7.0"]
+  [macchiato/hiccups "0.4.1"]]
 
  :builds
  {:app {:target :browser
