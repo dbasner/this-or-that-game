@@ -1,19 +1,30 @@
 ;; shadow-cljs configuration
-{:source-paths
- ["src/dev"
-  "src/main"
-  "src/test"]
+;{:source-paths
+; ["src/dev"
+;  "src/main"
+;  "src/test"]
+;
+; :dependencies true
+;
+; :builds
+; {:app {:target :browser
+;         :output-dir "public/js"
+;         :modules {:main {:entries [com.github.dbasner.this-or-that.core]}}
+;         :devtools {:repl-init-ns com.github.dbasner.this-or-that.core
+;                    :after-load com.github.dbasner.this-or-that.core/on-refresh
+;                    :repl-pprint true
+;                    :http-root "public/"
+;                    :http-port 9001}}}}
+;
 
- :dependencies
- [[thheller/shadow-cljs "2.11.18"]
-  [binaryage/oops "0.7.0"]
-  [macchiato/hiccups "0.4.1"]]
-
- :builds
- {:app {:target :browser
-         :output-dir "public/js"
-         :modules {:main {:entries [com.github.dbasner.this-or-that.core]}}
-         :devtools {:repl-init-ns com.github.dbasner.this-or-that.core
-                    :repl-pprint true
-                    :http-root "public/"
-                    :http-port 9001}}}}
+{
+ :deps         true
+ :builds       {:app {:target     :browser
+                      :output-dir "public/js"
+                      :modules    {:main {:entries [com.github.dbasner.this-or-that.core]}}
+                      :devtools   {:repl-init-ns com.github.dbasner.this-or-that.core
+                                   :after-load com.github.dbasner.this-or-that.core/on-refresh
+                                   :repl-pprint  true
+                                   :http-root    "public/"
+                                   :http-port    9001}}}
+ :nrepl        {:port 3333}}
