@@ -41,7 +41,7 @@
 (defn rand-situation-count [n] (+ (rand-int n) 2))
 (defn rand-noun [] (rand-nth nouns))
 
-(defn generate-phrase []
+(defn generate-situation []
   {:verb (rand-verb)
    :count-modifier (rand-count-modifier)
    :count (rand-situation-count 20)
