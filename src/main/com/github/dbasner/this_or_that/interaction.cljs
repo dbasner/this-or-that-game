@@ -66,22 +66,28 @@
         winners (filter #(= (second %) max-value) scores)]
     (assoc-in state [:winners] (keys winners))))
 
+(defn prepare-next-round [state]
+  (-> state
+      (add-scores)
+      (dec-rounds-left)
+      (reset-votes)
+      (generate-new-situations)))
+
+(defn vote-and-rotate [state player-id situation-id]
+  (-> state
+      (add-vote player-id situation-id)
+      (rotate-current-player)))
+
 (defn handle-vote
   [state player-id situation-id]
   "handles everything related to voting"
-  (let [state-voted-rotated (-> state
-                                (add-vote player-id situation-id)
-                                (rotate-current-player))
-        is-new-round? (= 0 (:current-voter-index state-voted-rotated))]
+  (let [state-voted-rotated (vote-and-rotate state player-id situation-id)
+        is-new-round? (= 0 (:current-voter-index state-voted-rotated))
+        new-round-state (prepare-next-round state-voted-rotated)]
     (if is-new-round?
-      (let [new-round-state (-> state-voted-rotated
-                                (add-scores)
-                                (dec-rounds-left)
-                                (reset-votes)
-                                (generate-new-situations))]
-        (if (< (:rounds-left new-round-state) 1)
-          (decide-winners new-round-state)
-          new-round-state))
+      (if (< (:rounds-left new-round-state) 1)
+        (decide-winners new-round-state)
+        new-round-state)
       state-voted-rotated)))
 
 (defn handle-vote!
