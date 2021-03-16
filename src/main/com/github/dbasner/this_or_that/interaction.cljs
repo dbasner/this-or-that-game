@@ -54,7 +54,17 @@
       (assoc-in [:current-round-votes :situationA] [])
       (assoc-in [:current-round-votes :situationB] [])))
 
-;;todo need to count down rounds so game ends eventually (x rounds? first to y points?)
+
+(defn dec-rounds-left
+  [state]
+  (update-in state [:rounds-left] dec))
+
+(defn decide-winners
+  [state]
+  (let [scores (:scores state)
+        max-value (apply max (vals scores))
+        winners (filter #(= (second %) max-value) scores)]
+    (assoc-in state [:winners] (keys winners))))
 
 (defn handle-vote
   [state player-id situation-id]
@@ -64,10 +74,14 @@
                                 (rotate-current-player))
         is-new-round? (= 0 (:current-voter-index state-voted-rotated))]
     (if is-new-round?
-      (-> state-voted-rotated
-          (add-scores)
-          (reset-votes)
-          (generate-new-situations))
+      (let [new-round-state (-> state-voted-rotated
+                                (add-scores)
+                                (dec-rounds-left)
+                                (reset-votes)
+                                (generate-new-situations))]
+        (if (< (:rounds-left new-round-state) 1)
+          (decide-winners new-round-state)
+          new-round-state))
       state-voted-rotated)))
 
 (defn handle-vote!

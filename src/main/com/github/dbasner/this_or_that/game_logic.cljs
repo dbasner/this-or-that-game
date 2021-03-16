@@ -11,30 +11,11 @@
 ;; start by doing just generating a basic string
 
 (def verbs [
-            "eat"
-            "cook"
-            "punch"
-            "get punched by"
-            "get kicked by"
-            "kick"
-            "date"
-            "kiss"
-            "marry"])
+            "eat" "cook" "punch" "get punched by" "get kicked by" "kick" "date" "kiss" "marry"])
 
-(def count-modifiers ["roughly"
-                      "about"
-                      "precisely"
-                      "exactly"
-                      "almost"
-                      "just about"])
+(def count-modifiers ["roughly" "about" "precisely" "exactly" "almost" "just about"])
 
-(def nouns [
-            "sharks"
-            "people"
-            "dogs"
-            "turles"
-            "chairs"
-            "tables"])
+(def nouns ["sharks" "people" "dogs" "turles" "chairs" "tables"])
 
 (defn rand-verb [] (rand-nth verbs))
 (defn rand-count-modifier [] (rand-nth count-modifiers))

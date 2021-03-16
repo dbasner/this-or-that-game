@@ -22,7 +22,7 @@
    :situationA example-situation1
    :situationB example-situation2
    :rounds-left 5
-   :winner :not-determined})
+   :winners []})
 
 (def state (atom initial-state))
 

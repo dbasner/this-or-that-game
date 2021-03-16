@@ -16,22 +16,22 @@
       [:span.noun noun]]]))
 
 (defn PageTitle []
-  [:h1.display-3 "This or That!"])
+  [:h1.display-3.game-title "This or That!"])
 
 (defn Situation
   [situation]
   (DescribeSituation situation))
 
 (defn GameOverBanner
-  [result]
-  (let [tied-players (:tie result)
-        ;;todo nil? empty? runtime error?
-        tie? (nil? tied-players)
-        winner (if (not tie?) (:winner result) nil)
+  [winners]
+  (let [
+        tie? (> (count winners) 1)
+        winner (if (not tie?) (first winners) nil)
         result-alert (if tie?
-                       (str "Players " (clojure.string/join ", " tied-players)" tied!")
+                       (str "Players " (clojure.string/join ", " winners)" tied!")
                        (str "Player " winner " won!"))
-        result-class (if winner "winner" "tied")]
+        result-class (if tie? "tied" "winner")]
+    (println (str "ASFASDFASDFASDFA   " winners))
     [:div.banner-wrapper
      [:div {:class result-class}
       [:h2.alert-heading result-alert]
@@ -91,16 +91,16 @@
     [app-state]
     (let
       [current-player (nth (:player-ids app-state) (:current-voter-index app-state))
-       result (:winner app-state)
+       result (:winners app-state)
        rounds-left (:rounds-left app-state)
        game-started? (nil? current-player)
-       game-over? (not= :not-determined (:winner app-state))]
+       game-over? (not= (count (:winners app-state)) 0)]
       [:main.text-center
        (PageTitle)
+       (AllScoresBanner (:scores app-state))
        (if game-over?
          (GameOverBanner result)
          [:div
-          (AllScoresBanner (:scores app-state))
           (PlayerTurnBanner current-player)
           (CurrentVotes (:current-round-votes app-state))
           (SituationOptions (:situationA app-state) (:situationB app-state))])]))
