@@ -11,7 +11,7 @@
             :name  "new-game-player-count"
             :value 3
             :min   2}]
-   [:input#startGameBtn.btn.btn-primary {:type "submit" :value "Start Game!"}]])
+   [:input#startGameBtn {:class "button **is-large is-success is-rounded**" :type "submit" :value "Start Game!"}]])
 
 
 (defn DescribeSituation
@@ -27,7 +27,7 @@
       [:span.noun noun]]]))
 
 (defn PageTitle []
-  [:h1.display-3.game-title "This or That!"])
+  [:h1.display-3.game-title {:class "hero is-info is-medium"} "This or That!"])
 
 (defn Situation
   [situation]
@@ -45,7 +45,7 @@
     [:div.banner-wrapper
      [:div {:class result-class}
       [:h2.alert-heading result-alert]
-      [:button#newGameBtn.btn.btn-primary "New Game"]]]))
+      [:button#newGameBtn {:class "button **is-large is-success is-rounded**"} "New Game"]]]))
 
 (defn PlayerTurnBanner
   [current-player]
@@ -66,10 +66,10 @@
      (fn [indiv-score] (apply Score indiv-score)) scores)])
 
 (defn ButtonSituationA []
-  [:input {:id "voteSituationAButton" :class "voteButton btn btn-primary" :type "button" :value "I'd rather do this"}])
+  [:input {:id "voteSituationAButton" :class "voteButton button **is-large is-success is-rounded**" :type "button" :value "I'd rather do this"}])
 
 (defn ButtonSituationB []
-  [:input {:id "voteSituationBButton" :class "voteButton btn btn-primary" :type "button" :value "I'd rather do that"}])
+  [:input {:id "voteSituationBButton" :class "voteButton button **is-large is-success is-rounded**" :type "button" :value "I'd rather do that"}])
 
 (defn SituationOptions
   [situationA situationB]
@@ -101,7 +101,6 @@
        game-over? (not= 0 (count (:winners app-state)))
        player-ids (:player-ids app-state)
        player-index (:current-voter-index app-state)]
-      (println app-state)
       [:main.text-center
        (PageTitle)
        (if-not game-started?
