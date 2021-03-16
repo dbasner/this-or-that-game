@@ -3,6 +3,17 @@
   (:require [hiccups.runtime :as hiccups]))
 
 
+(defn GameSetup []
+  [:div.game-setup
+   [:label.game-setup-text {:for "newGameCount"} "How Many People Are Playing? "]
+   [:input {:id    "newGamePlayerCount"
+            :type  "number"
+            :name  "new-game-player-count"
+            :value 3
+            :min   2}]
+   [:input#startGameBtn.btn.btn-primary {:type "submit" :value "Start Game!"}]])
+
+
 (defn DescribeSituation
   [situation]
   (let [verb (:verb situation)
@@ -39,30 +50,26 @@
 (defn PlayerTurnBanner
   [current-player]
   [:div.banner-wrapper.turn-wrapper
-   [:span.label "Current Turn: "]
+   [:h3.label "Current Turn:"]
    [:span {:class "current-turn"} current-player]])
 
 (defn Score
   [player-id score]
-  [:div.indiv-score-player player-id
-   [:div.indiv-score-amount score]])
+  [:div.indiv-score-player (str player-id ": ")
+   [:span.indiv-score-amount score]])
 
 (defn AllScoresBanner
   [scores]
   [:div.scorebanner
-   [:h1 "Scores:"]
+   [:h3 "Scores:"]
    (map
      (fn [indiv-score] (apply Score indiv-score)) scores)])
 
-(comment (AllScoresBanner {"player-1" 0
-                           "player-2" 0
-                           "player-3" 1}))
-
 (defn ButtonSituationA []
-  [:input {:id "voteSituationAButton" :class "voteButton" :type "button" :value "I'd rather do this"}])
+  [:input {:id "voteSituationAButton" :class "voteButton btn btn-primary" :type "button" :value "I'd rather do this"}])
 
 (defn ButtonSituationB []
-  [:input {:id "voteSituationBButton" :class "voteButton" :type "button" :value "I'd rather do that"}])
+  [:input {:id "voteSituationBButton" :class "voteButton btn btn-primary" :type "button" :value "I'd rather do that"}])
 
 (defn SituationOptions
   [situationA situationB]
@@ -89,21 +96,23 @@
 (defn ThisOrThatGame
     [app-state]
     (let
-      [current-player (nth (:player-ids app-state) (:current-voter-index app-state))
-       result (:winners app-state)
-       rounds-left (:rounds-left app-state)
-       game-started? (nil? current-player)
-       game-over? (not= (count (:winners app-state)) 0)]
+      [result (:winners app-state)
+       game-started? (not= 0 (count (:player-ids app-state)))
+       game-over? (not= 0 (count (:winners app-state)))
+       player-ids (:player-ids app-state)
+       player-index (:current-voter-index app-state)]
+      (println app-state)
       [:main.text-center
        (PageTitle)
-       (AllScoresBanner (:scores app-state))
-       (if game-over?
-         (GameOverBanner result)
+       (if-not game-started?
+         (GameSetup)
          [:div
-          (PlayerTurnBanner current-player)
-          (CurrentVotes (:current-round-votes app-state))
-          (SituationOptions (:situationA app-state) (:situationB app-state))])]))
-
+          (AllScoresBanner (:scores app-state))
+          (if game-over?
+            (GameOverBanner result)
+            [:div
+             (PlayerTurnBanner (nth player-ids player-index))
+             (SituationOptions (:situationA app-state) (:situationB app-state))])])]))
 
 
 

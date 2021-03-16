@@ -12,11 +12,9 @@
                          :noun  "hotdogs"})
 
 (def initial-state
-  {:player-ids ["player-1" "player-2" "player-3"]
+  {:player-ids []
    :current-voter-index 0
-   :scores {"player-1" 0
-            "player-2" 0
-            "player-3" 0}
+   :scores {}
    :current-round-votes {:situationA []
                          :situationB []}
    :situationA example-situation1

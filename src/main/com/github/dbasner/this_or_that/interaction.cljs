@@ -4,15 +4,14 @@
             [goog.functions :as gfunctions]
             [com.github.dbasner.this-or-that.game-logic :refer [generate-situation]]
             [com.github.dbasner.this-or-that.state :refer [state initial-state]]
-            [com.github.dbasner.this-or-that.html :refer [ThisOrThatGame]]
-            [clojure.pprint :as pp])
+            [com.github.dbasner.this-or-that.html :refer [ThisOrThatGame]])
   (:require-macros [hiccups.core :as hiccups]))
 
 (defn add-vote
   [state player-id situation-id]
   (update-in state [:current-round-votes situation-id] conj player-id))
 
-;; todo this could just be a continuous vote count that we modulo player-count
+;; todo this could just be a continuous vote count that we mod player-count
 (defn rotate-current-player
   [state]
   (let [max-player-index (dec (count (:player-ids state)))
@@ -94,10 +93,33 @@
   [player-id situation-id]
   (swap! state (fn [new-state] (handle-vote new-state player-id situation-id))))
 
+(defn generate-player-ids [player-count]
+  (vec (for [n (range player-count)]                        ;; <1>
+         (str "Player-" (+ n 1)))))
+
+
+(defn generate-new-game-scores [player-ids]
+  (apply assoc {} (interleave player-ids
+                              (repeat (count player-ids) 0))))
+
+(defn start-new-game! [count]
+  (let [player-ids (generate-player-ids count)
+        scores (generate-new-game-scores player-ids)]
+    (swap! state (fn
+                   [old-state]
+                   (-> old-state
+                       (assoc-in [:player-ids] player-ids)
+                       (assoc-in [:scores] scores)
+                       (assoc-in [:current-voter-index] 0)
+                       (generate-new-situations))))))
+
 
 (defn get-current-player
   [state]
   (nth (:player-ids state)  (:current-voter-index state)))
+
+(defn get-element-by-id [id]
+  (.call (aget js/document "getElementById") js/document id))
 
 (defn click-app-container
   [event]
@@ -105,10 +127,11 @@
         isSituationAButton? (= (oget target-el "id") "voteSituationAButton")
         isSituationBButton? (= (oget target-el "id") "voteSituationBButton")
         isNewGameButton? (= (oget target-el "id") "newGameBtn")
-        player-id (get-current-player @state)]
+        isStartGameButton? (= (oget target-el "id") "startGameBtn")]
     (cond
-      isSituationAButton? (handle-vote! player-id :situationA)
-      isSituationBButton? (handle-vote! player-id :situationB)
+      isStartGameButton? (start-new-game! (oget (get-element-by-id "newGamePlayerCount") "value"))
+      isSituationAButton? (handle-vote! (get-current-player @state) :situationA)
+      isSituationBButton? (handle-vote! (get-current-player @state) :situationB)
       isNewGameButton? (reset! state initial-state)
       :else nil)))
 
