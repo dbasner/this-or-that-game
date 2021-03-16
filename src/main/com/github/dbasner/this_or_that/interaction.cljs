@@ -3,7 +3,7 @@
             [goog.dom :as gdom]
             [goog.functions :as gfunctions]
             [com.github.dbasner.this-or-that.game-logic :refer [generate-situation]]
-            [com.github.dbasner.this-or-that.state :refer [state]]
+            [com.github.dbasner.this-or-that.state :refer [state initial-state]]
             [com.github.dbasner.this-or-that.html :refer [ThisOrThatGame]]
             [clojure.pprint :as pp])
   (:require-macros [hiccups.core :as hiccups]))
@@ -104,10 +104,12 @@
   (let [target-el (oget event "target")
         isSituationAButton? (= (oget target-el "id") "voteSituationAButton")
         isSituationBButton? (= (oget target-el "id") "voteSituationBButton")
+        isNewGameButton? (= (oget target-el "id") "newGameBtn")
         player-id (get-current-player @state)]
     (cond
       isSituationAButton? (handle-vote! player-id :situationA)
       isSituationBButton? (handle-vote! player-id :situationB)
+      isNewGameButton? (reset! state initial-state)
       :else nil)))
 
 (def init-dom-events!

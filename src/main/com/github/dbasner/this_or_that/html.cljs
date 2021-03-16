@@ -31,7 +31,6 @@
                        (str "Players " (clojure.string/join ", " winners)" tied!")
                        (str "Player " winner " won!"))
         result-class (if tie? "tied" "winner")]
-    (println (str "ASFASDFASDFASDFA   " winners))
     [:div.banner-wrapper
      [:div {:class result-class}
       [:h2.alert-heading result-alert]
