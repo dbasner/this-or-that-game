@@ -11,7 +11,8 @@
             :name  "new-game-player-count"
             :value 3
             :min   2}]
-   [:input#startGameBtn {:class "button **is-large is-success is-rounded**" :type "submit" :value "Start Game!"}]])
+   [:input#startGameBtn.button.is-success.is-rounded
+    {:type "submit" :value "Start Game!"}]])
 
 
 (defn DescribeSituation
@@ -97,8 +98,8 @@
     [app-state]
     (let
       [result (:winners app-state)
-       game-started? (not= 0 (count (:player-ids app-state)))
-       game-over? (not= 0 (count (:winners app-state)))
+       game-started? (not (zero? (count (:player-ids app-state))))
+       game-over? (not (zero? (count (:winners app-state))))
        player-ids (:player-ids app-state)
        player-index (:current-voter-index app-state)]
       [:main.text-center
@@ -112,6 +113,3 @@
             [:div
              (PlayerTurnBanner (nth player-ids player-index))
              (SituationOptions (:situationA app-state) (:situationB app-state))])])]))
-
-
-
